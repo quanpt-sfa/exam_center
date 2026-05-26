@@ -1,0 +1,68 @@
+{
+  "exam_submission_id": 12007,
+  "overall_status": "GRADING_FAILED",
+  "is_terminal": true,
+  "can_retry": true,
+  "pending_reason": null,
+  "failure_reason": "GRADING_FAILED",
+  "seal": {
+    "submission_seal_id": 91007,
+    "seal_status": "SEALED",
+    "sealed_at": "2026-05-13T08:11:00Z",
+    "sealed_answer_count": 3,
+    "has_sealed_answer": true
+  },
+  "capture": {
+    "required": false,
+    "status": null,
+    "capture_job_id": null,
+    "capture_profile_id": null,
+    "artifact_count": 0,
+    "dataset_count": 0,
+    "latest_event_type": null,
+    "latest_error_code": null,
+    "latest_error_message_sanitized": null
+  },
+  "grading": {
+    "grading_job_id": 94007,
+    "grading_job_status": "FAILED",
+    "grading_run_id": 95007,
+    "grading_run_status": "FAILED",
+    "worker_id": "grading-worker-c",
+    "claimed_at": "2026-05-13T08:11:20Z",
+    "finished_at": "2026-05-13T08:12:15Z",
+    "latest_event_type": "RUN_FAILED"
+  },
+  "tasks": {
+    "total": 3,
+    "queued": 0,
+    "running": 0,
+    "waiting_capture": 0,
+    "completed": 1,
+    "failed": 2,
+    "needs_review": 0,
+    "by_input_source": {
+      "SEALED_TEXT_ANSWER": 3
+    },
+    "by_answer_language": {
+      "SQL": 3
+    }
+  },
+  "results": {
+    "actual_result_count": 1,
+    "comparison_count": 1,
+    "question_score_count": 1
+  },
+  "score": {
+    "submission_score_id": null,
+    "total_score": null,
+    "max_score": null,
+    "score_status": null,
+    "finalized_at": null
+  },
+  "timestamps": {
+    "created_at": "2026-05-13T08:03:00Z",
+    "updated_at": "2026-05-13T08:12:15Z",
+    "latest_activity_at": "2026-05-13T08:12:15Z"
+  }
+}

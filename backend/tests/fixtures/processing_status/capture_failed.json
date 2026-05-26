@@ -1,0 +1,68 @@
+{
+  "exam_submission_id": 12006,
+  "overall_status": "CAPTURE_FAILED",
+  "is_terminal": true,
+  "can_retry": true,
+  "pending_reason": null,
+  "failure_reason": "CAPTURE_TIMEOUT",
+  "seal": {
+    "submission_seal_id": 91006,
+    "seal_status": "SEALED",
+    "sealed_at": "2026-05-13T08:09:00Z",
+    "sealed_answer_count": 5,
+    "has_sealed_answer": true
+  },
+  "capture": {
+    "required": true,
+    "status": "FAILED",
+    "capture_job_id": 93006,
+    "capture_profile_id": 4406,
+    "artifact_count": 0,
+    "dataset_count": 0,
+    "latest_event_type": "CAPTURE_FAILED",
+    "latest_error_code": "CAPTURE_TIMEOUT",
+    "latest_error_message_sanitized": "Capture request timed out while collecting source snapshot."
+  },
+  "grading": {
+    "grading_job_id": null,
+    "grading_job_status": null,
+    "grading_run_id": null,
+    "grading_run_status": null,
+    "worker_id": null,
+    "claimed_at": null,
+    "finished_at": null,
+    "latest_event_type": null
+  },
+  "tasks": {
+    "total": 5,
+    "queued": 0,
+    "running": 0,
+    "waiting_capture": 5,
+    "completed": 0,
+    "failed": 0,
+    "needs_review": 0,
+    "by_input_source": {
+      "CAPTURE_DATASET": 5
+    },
+    "by_answer_language": {
+      "SQL": 5
+    }
+  },
+  "results": {
+    "actual_result_count": 0,
+    "comparison_count": 0,
+    "question_score_count": 0
+  },
+  "score": {
+    "submission_score_id": null,
+    "total_score": null,
+    "max_score": null,
+    "score_status": null,
+    "finalized_at": null
+  },
+  "timestamps": {
+    "created_at": "2026-05-13T08:02:00Z",
+    "updated_at": "2026-05-13T08:10:00Z",
+    "latest_activity_at": "2026-05-13T08:10:00Z"
+  }
+}

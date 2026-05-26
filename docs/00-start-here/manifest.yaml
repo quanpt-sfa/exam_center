@@ -1,0 +1,165 @@
+status: active
+owner: docs
+source_of_truth: true
+token_budget: low
+
+current_runtime:
+  backend:
+    name: FastAPI
+    paths:
+      - backend/
+  database:
+    name: PostgreSQL
+    paths:
+      - database/postgres/
+  frontend:
+    name: React/Vite
+    paths:
+      - frontend/
+  worker:
+    name: worker_runtime
+    paths:
+      - worker/
+  contracts:
+    api:
+      - contracts/api/
+    deployment:
+      - contracts/deployment/
+    worker_docs:
+      - contracts/worker/
+
+task_defaults:
+  max_read_first_files: 3
+  read_current_docs_first: true
+  search_before_opening_heavy_files: true
+  do_not_scan_all_docs: true
+  avoid_evidence_by_default: true
+
+tasks:
+  quick_edit:
+    read_first:
+      - docs/current/workflows/quick-edit.md
+      - docs/00-start-here/token-budget.md
+      - docs/00-start-here/routing.md
+    read_if_needed:
+      - docs/current/engineering/README.md
+      - docs/current/features/README.md
+    avoid_by_default:
+      - docs/reports/**
+      - reports/**
+      - reports/copy-provenance.json
+    notes: Use this route for quick edits; search symbols and paths before opening heavy files.
+
+  api_runtime:
+    read_first:
+      - docs/current/runtime/api.md
+      - docs/current/runtime/postgres.md
+    read_if_needed:
+      - docs/current/api/README.md
+      - docs/current/deployment/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current backend runtime summaries first.
+
+  api_contract:
+    read_first:
+      - docs/current/api/README.md
+      - docs/current/runtime/api.md
+    read_if_needed:
+      - docs/current/runtime/postgres.md
+      - docs/current/engineering/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current API contract summaries and backend runtime docs.
+
+  postgres_runtime:
+    read_first:
+      - docs/current/runtime/postgres.md
+      - docs/current/deployment/README.md
+    read_if_needed:
+      - docs/current/runtime/api.md
+      - docs/current/engineering/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current PostgreSQL runtime and deployment docs.
+
+  frontend_runtime:
+    read_first:
+      - docs/current/runtime/frontend.md
+      - docs/current/features/README.md
+    read_if_needed:
+      - docs/current/runtime/api.md
+      - docs/current/engineering/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current frontend runtime and feature summaries.
+
+  worker_runtime:
+    read_first:
+      - docs/current/runtime/worker.md
+      - docs/current/deployment/README.md
+    read_if_needed:
+      - docs/current/runtime/postgres.md
+      - docs/current/architecture/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current worker runtime and deployment docs.
+
+  deployment:
+    read_first:
+      - docs/current/deployment/README.md
+      - docs/current/runtime/postgres.md
+      - docs/current/runtime/api.md
+    read_if_needed:
+      - docs/current/runtime/worker.md
+      - docs/current/engineering/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current deployment, database, and backend runtime docs.
+
+  engineering_guardrails:
+    read_first:
+      - docs/current/engineering/README.md
+      - docs/current/runtime/api.md
+    read_if_needed:
+      - docs/current/features/README.md
+      - docs/current/deployment/README.md
+    avoid_by_default:
+      - unrelated feature docs
+    notes: Use current guardrails and backend runtime docs.
+
+  feature_docs:
+    read_first:
+      - docs/current/features/README.md
+      - docs/current/runtime/frontend.md
+      - docs/current/runtime/api.md
+    read_if_needed:
+      - docs/current/engineering/README.md
+      - docs/current/deployment/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use current feature summaries with frontend and backend runtime docs.
+
+  review_needed:
+    read_first:
+      - docs/00-start-here/routing.md
+      - docs/current/README.md
+    read_if_needed:
+      - docs/current/engineering/README.md
+      - docs/current/features/README.md
+    avoid_by_default:
+      - unrelated current domains
+    notes: Use when task routing is unclear and current docs need triage.
+
+  readiness_audit:
+    read_first:
+      - docs/00-start-here/routing.md
+      - docs/00-start-here/token-budget.md
+      - docs/current/engineering/README.md
+    read_if_needed:
+      - docs/current/features/README.md
+    avoid_by_default:
+      - runtime source trees until the audit scope is defined
+    notes: Use only for explicit readiness or routing audits.
+
+historical_files: outside_current_documentation_system

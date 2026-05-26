@@ -1,0 +1,84 @@
+{
+  "path_rewrites": [
+    {
+      "from": "apps-next/backend/",
+      "to": "backend/"
+    },
+    {
+      "from": "apps-next/frontend/",
+      "to": "frontend/"
+    },
+    {
+      "from": "apps-next/worker/",
+      "to": "worker/"
+    },
+    {
+      "from": "apps-next/database/",
+      "to": "database/"
+    },
+    {
+      "from": "apps-next/contracts/",
+      "to": "contracts/"
+    },
+    {
+      "from": "apps-next/reports/",
+      "to": "reports/"
+    },
+    {
+      "from": "docs-next/",
+      "to": "docs/"
+    },
+    {
+      "from": "apps/api/",
+      "to": "backend/"
+    },
+    {
+      "from": "apps/frontend/",
+      "to": "frontend/"
+    },
+    {
+      "from": "apps/worker/",
+      "to": "worker/"
+    },
+    {
+      "from": "db/postgres/",
+      "to": "database/postgres/"
+    },
+    {
+      "from": "docs/api/",
+      "to": "contracts/api/"
+    },
+    {
+      "from": "docs/deployment_readiness/",
+      "to": "contracts/deployment/"
+    },
+    {
+      "from": "docs/worker_runtime/",
+      "to": "contracts/worker/"
+    }
+  ],
+  "status_rewrites": [
+    {
+      "from": "status: draft",
+      "to": "status: active"
+    },
+    {
+      "from": "source_of_truth: false",
+      "to": "source_of_truth: true"
+    },
+    {
+      "from": "workspace: staged_current_runtime",
+      "to": "workspace: standalone_runtime"
+    }
+  ],
+  "field_policies": [
+    {
+      "field": "allowed_source_paths",
+      "action": "rewrite_or_remove_when_referring_to_old_source_roots"
+    },
+    {
+      "field": "output_paths",
+      "action": "rewrite_or_remove_when_referring_to_old_source_roots"
+    }
+  ]
+}

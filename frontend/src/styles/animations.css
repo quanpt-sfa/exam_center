@@ -1,0 +1,121 @@
+/* ============================================================
+   Animations – exam-sys React
+   Micro-animations, transitions, loading states.
+   Depends on: design-tokens.css
+   ============================================================ */
+
+/* ── Keyframes ────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes skeleton-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Page entrance ────────────────────────────────────────── */
+.main-content > * {
+  animation: fadeInUp var(--duration-normal) var(--ease-default) both;
+}
+
+/* ── Card hover lift ──────────────────────────────────────── */
+.card,
+.exam-dashboard-card,
+.admin-module-card,
+.setup-card,
+.stat-tile,
+.dashboard-section {
+  transition: box-shadow var(--duration-fast) var(--ease-default),
+              transform var(--duration-fast) var(--ease-default);
+}
+
+.card:hover,
+.exam-dashboard-card:hover,
+.admin-module-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* ── Button press ─────────────────────────────────────────── */
+.primary-button,
+.secondary-button,
+.ghost-button {
+  transition: background-color var(--duration-fast) var(--ease-default),
+              border-color var(--duration-fast) var(--ease-default),
+              box-shadow var(--duration-fast) var(--ease-default),
+              transform var(--duration-fast) var(--ease-default);
+}
+
+.primary-button:active,
+.secondary-button:active,
+.ghost-button:active {
+  transform: scale(0.97);
+}
+
+/* ── Skeleton loading ─────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--clr-gray-100) 25%,
+    var(--clr-gray-200) 50%,
+    var(--clr-gray-100) 75%
+  );
+  background-size: 400px 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--radius-md);
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.skeleton--text   { height: 1em; margin-bottom: var(--sp-2); border-radius: var(--radius-full); }
+.skeleton--title  { height: 1.5em; width: 60%; border-radius: var(--radius-full); }
+.skeleton--btn    { height: 36px; width: 120px; border-radius: var(--radius-lg); }
+.skeleton--avatar { width: 40px; height: 40px; border-radius: var(--radius-full); }
+
+/* ── Spinner ──────────────────────────────────────────────── */
+.spinner-ring {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--clr-gray-300);
+  border-top-color: var(--clr-primary-500);
+  border-radius: var(--radius-full);
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Table row stagger ────────────────────────────────────── */
+tbody tr {
+  animation: fadeIn var(--duration-normal) var(--ease-default) both;
+}
+
+tbody tr:nth-child(1)  { animation-delay: 0ms; }
+tbody tr:nth-child(2)  { animation-delay: 30ms; }
+tbody tr:nth-child(3)  { animation-delay: 60ms; }
+tbody tr:nth-child(4)  { animation-delay: 90ms; }
+tbody tr:nth-child(5)  { animation-delay: 120ms; }
+tbody tr:nth-child(n+6) { animation-delay: 150ms; }
+
+/* ── Reduced motion ───────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

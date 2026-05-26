@@ -1,0 +1,39 @@
+{
+  "required_standalone_files": [
+    {
+      "target": "backend/requirements.txt",
+      "status": "required",
+      "candidate_sources": [
+        "requirements.txt"
+      ]
+    },
+    {
+      "target": "backend/requirements-dev.txt",
+      "status": "required",
+      "candidate_sources": [
+        "requirements-dev.txt"
+      ]
+    },
+    {
+      "target": "worker/requirements.txt",
+      "status": "required",
+      "candidate_sources": [
+        "requirements.txt"
+      ]
+    },
+    {
+      "target": "worker/requirements-dev.txt",
+      "status": "required",
+      "candidate_sources": [
+        "requirements-dev.txt"
+      ]
+    },
+    {
+      "target": "frontend/package.json",
+      "status": "required",
+      "candidate_sources": [
+        "apps-next/frontend/package.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+status: active
+owner: docs
+source_of_truth: true
+workspace: standalone_runtime
+
+task_defaults:
+  max_read_first_files: 3
+  do_not_scan_full_repository: true
+  prefer_local_agents: true
+
+tasks:
+  quick_edit:
+    read_first:
+      - QUICK_EDIT.md
+      - manifest.yaml
+    read_if_needed:
+      - backend/AGENTS.md
+      - frontend/AGENTS.md
+      - worker/AGENTS.md
+      - database/AGENTS.md
+      - contracts/AGENTS.md
+    allowed_source_paths:
+      - backend/**
+      - frontend/**
+      - worker/**
+      - database/**
+      - contracts/**
+    output_paths:
+      - backend/**
+      - frontend/**
+      - worker/**
+      - database/**
+      - contracts/**
+    avoid_by_default:
+      - reports/**
+      - reports/copy-provenance.json
+      - reports/readiness-audit.md
+      - reports/migration-closure-report.md
+      - docs/archive/**
+      - docs/evidence/**
+
+  backend_runtime:
+    read_first:
+      - AGENTS.md
+      - backend/AGENTS.md
+      - backend/README.md
+    read_if_needed:
+      - docs/current/runtime/api.md
+      - docs/current/api/README.md
+    allowed_source_paths:
+      - backend/**
+    output_paths:
+      - backend/**
+    avoid_by_default:
+      - unrelated current domains
+
+  frontend_runtime:
+    read_first:
+      - AGENTS.md
+      - frontend/AGENTS.md
+      - frontend/README.md
+    read_if_needed:
+      - docs/current/runtime/frontend.md
+      - docs/current/api/README.md
+    allowed_source_paths:
+      - frontend/**
+    output_paths:
+      - frontend/**
+    avoid_by_default:
+      - unrelated current domains
+
+  worker_runtime:
+    read_first:
+      - AGENTS.md
+      - worker/AGENTS.md
+      - worker/README.md
+    read_if_needed:
+      - docs/current/runtime/worker.md
+    allowed_source_paths:
+      - worker/**
+    output_paths:
+      - worker/**
+    avoid_by_default:
+      - unrelated current domains
+
+  database_runtime:
+    read_first:
+      - AGENTS.md
+      - database/AGENTS.md
+      - database/README.md
+    read_if_needed:
+      - docs/current/runtime/postgres.md
+      - docs/current/deployment/README.md
+    allowed_source_paths:
+      - database/postgres/**
+    output_paths:
+      - database/postgres/**
+    avoid_by_default:
+      - unrelated current domains
+
+  api_contracts:
+    read_first:
+      - AGENTS.md
+      - contracts/AGENTS.md
+      - contracts/README.md
+    read_if_needed:
+      - docs/current/api/README.md
+      - contracts/api/**
+    allowed_source_paths:
+      - contracts/api/**
+    output_paths:
+      - contracts/api/**
+    avoid_by_default:
+      - runtime implementation trees
+
+  deployment_contracts:
+    read_first:
+      - AGENTS.md
+      - contracts/AGENTS.md
+      - contracts/README.md
+    read_if_needed:
+      - docs/current/deployment/README.md
+      - contracts/deployment/**
+    allowed_source_paths:
+      - contracts/deployment/**
+    output_paths:
+      - contracts/deployment/**
+    avoid_by_default:
+      - runtime implementation trees
+
+  staged_copy_inventory:
+    read_first:
+      - AGENTS.md
+      - reports/copy-inventory.md
+      - docs/current/engineering/README.md
+    read_if_needed:
+      - manifest.yaml
+    allowed_source_paths:
+      - backend/**
+      - frontend/**
+      - worker/**
+      - database/postgres/**
+      - contracts/api/**
+      - contracts/deployment/**
+      - contracts/worker/**
+    output_paths:
+      - reports/copy-inventory.md
+    avoid_by_default:
+      - implementation file contents before inventory review
+
+  readiness_audit:
+    read_first:
+      - reports/readiness-dashboard.md
+      - reports/documentation-sprawl-index.md
+    read_if_needed:
+      - reports/readiness-audit.md
+      - reports/migration-closure-report.md
+      - reports/unresolved-imports.md
+      - reports/copy-inventory.md
+      - reports/copy-provenance.json
+    allowed_source_paths:
+      - reports/**
+      - tools/docs/check_project_readiness.py
+      - tools/docs/check_legacy_boundaries.py
+      - tools/docs/check_docs_routing.py
+    output_paths:
+      - reports/**
+    avoid_by_default:
+      - runtime source trees unless a boundary review requires them
+
+  validation:
+    read_first:
+      - AGENTS.md
+      - tools/docs/check_project_readiness.py
+      - manifest.yaml
+    read_if_needed:
+      - tools/docs/check_project_readiness.py
+      - tools/docs/check_legacy_boundaries.py
+      - tools/docs/check_docs_routing.py
+    allowed_source_paths:
+      - tools/docs/check_project_readiness.py
+      - tools/docs/check_legacy_boundaries.py
+      - tools/docs/check_docs_routing.py
+    output_paths:
+      - tools/docs/**
+      - reports/**
+    avoid_by_default:
+      - full repository scans
+      - reports/copy-provenance.json unless the checker failure points there
