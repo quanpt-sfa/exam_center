@@ -3,16 +3,15 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 from typing import Any
 
+from conftest import CONTRACTS_API_ROOT
 from app.main import app
 
 
 PATH = "/api/v1/submissions/{exam_submission_id}/processing-status"
 METHOD = "get"
-REPO_ROOT = Path(__file__).resolve().parents[3]
-SNAPSHOT_PATH = REPO_ROOT / "docs" / "api" / "openapi_submission_processing_status_snapshot.json"
+SNAPSHOT_PATH = CONTRACTS_API_ROOT / "openapi_submission_processing_status_snapshot.json"
 
 REQUIRED_PUBLIC_FIELDS = [
     "exam_submission_id",

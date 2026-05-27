@@ -2,14 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from conftest import CONTRACTS_DEPLOYMENT_ROOT
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-RUNBOOK = REPO_ROOT / "docs" / "file_upload_answer_workflow_runbook.md"
+RUNBOOK = CONTRACTS_DEPLOYMENT_ROOT / "file_upload_answer_workflow_runbook.md"
 
 
-def _read(path: Path) -> str:
+def _read(path) -> str:
     return path.read_text(encoding="utf-8")
 
 
@@ -22,13 +21,13 @@ def test_runbook_contains_required_workflow_assertions() -> None:
     required = [
         "question_grading_profile.input_source = SEALED_FILE_REF",
         "taking-payload.answer_ui.ui_mode = FILE_UPLOAD",
-        "Upload tạo `answer_state.FILE_REF`",
+        "Upload creates `answer_state.FILE_REF`",
         "Seal snapshot `FILE_REF`",
         "Missing required file block seal",
         "Dispatch route `MANUAL_REVIEW_REQUIRED`",
-        "Manual review list có sealed file answer",
-        "Không lộ expected answer",
-        "Không lộ internal storage key/absolute path",
+        "Manual review list contains sealed file answer",
+        "Do not expose expected answer",
+        "Do not expose internal storage key or absolute path",
     ]
     for item in required:
         assert item in content
@@ -51,5 +50,5 @@ def test_runbook_has_api_sequences_for_admin_student_staff() -> None:
 
 def test_runbook_utf8_no_common_mojibake_markers() -> None:
     content = _read(RUNBOOK)
-    for marker in ["Ä‘", "á»", "Ã", "?ính", "Ã„â€˜", "Ã¡Â»", "Ãƒ"]:
+    for marker in ["Ã„â€˜", "Ã¡Â»", "Ãƒ", "?Ã­nh", "Ãƒâ€žÃ¢â‚¬Ëœ", "ÃƒÂ¡Ã‚Â»", "ÃƒÆ’"]:
         assert marker not in content

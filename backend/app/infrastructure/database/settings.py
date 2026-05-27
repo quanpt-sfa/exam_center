@@ -31,7 +31,9 @@ def get_database_settings() -> DatabaseSettings:
     """Build and cache database settings from process environment."""
     database = str(os.getenv("POSTGRES_DB", "")).strip()
     if not database:
-        raise RuntimeError("POSTGRES_DB is required; generate service env from root .env.lan DB_NAME.")
+        raise RuntimeError(
+            "POSTGRES_DB is required; set an explicit standalone test or service database name."
+        )
 
     return DatabaseSettings(
         host=os.getenv("POSTGRES_HOST", "localhost"),

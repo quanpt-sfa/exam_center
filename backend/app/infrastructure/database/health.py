@@ -11,5 +11,6 @@ from app.infrastructure.database.settings import DatabaseSettings, get_database_
 def check_database_health(settings: DatabaseSettings | None = None) -> dict[str, Any]:
     """Check database reachability without exposing secrets."""
 
-    cfg = settings or get_database_settings()
-    return pool_health_check(cfg)
+    if settings is None:
+        return pool_health_check()
+    return pool_health_check(settings)

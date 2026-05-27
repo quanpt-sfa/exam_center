@@ -45,5 +45,6 @@ def open_connection(settings: DatabaseSettings | None = None) -> AbstractContext
     if active is not None:
         return _reuse_active_connection(active)
 
-    cfg = settings or get_database_settings()
-    return get_connection(cfg)
+    if settings is None:
+        return get_connection()
+    return get_connection(settings)

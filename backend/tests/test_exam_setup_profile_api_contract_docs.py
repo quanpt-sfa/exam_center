@@ -2,17 +2,16 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from conftest import CONTRACTS_API_ROOT
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-DELIVERY_PROFILE_CONTRACT = REPO_ROOT / "docs" / "api" / "exam_version_delivery_profile_api.md"
-QUESTION_GRADING_PROFILE_CONTRACT = REPO_ROOT / "docs" / "api" / "question_grading_profile_api.md"
-ATOMIC_FILE_UPLOAD_CONFIG_CONTRACT = REPO_ROOT / "docs" / "api" / "file_upload_exam_version_configuration_api.md"
-QUESTION_AUTHORING_CONTRACT = REPO_ROOT / "docs" / "api" / "exam_version_question_authoring_api.md"
+DELIVERY_PROFILE_CONTRACT = CONTRACTS_API_ROOT / "exam_version_delivery_profile_api.md"
+QUESTION_GRADING_PROFILE_CONTRACT = CONTRACTS_API_ROOT / "question_grading_profile_api.md"
+ATOMIC_FILE_UPLOAD_CONFIG_CONTRACT = CONTRACTS_API_ROOT / "file_upload_exam_version_configuration_api.md"
+QUESTION_AUTHORING_CONTRACT = CONTRACTS_API_ROOT / "exam_version_question_authoring_api.md"
 
 
-def _read(path: Path) -> str:
+def _read(path) -> str:
     return path.read_text(encoding="utf-8")
 
 
@@ -80,5 +79,5 @@ def test_contract_docs_do_not_have_common_mojibake_markers() -> None:
         + "\n"
         + _read(QUESTION_AUTHORING_CONTRACT)
     )
-    for marker in ["Ã„â€˜", "Ã¡Â»", "Ãƒ", "?Ã­nh"]:
+    for marker in ["Ãƒâ€žÃ¢â‚¬Ëœ", "ÃƒÂ¡Ã‚Â»", "ÃƒÆ’", "?ÃƒÂ­nh"]:
         assert marker not in combined

@@ -1,0 +1,52 @@
+{
+  "path": "/api/v1/submissions/{exam_submission_id}/processing-status",
+  "method": "GET",
+  "parameter": {
+    "name": "exam_submission_id",
+    "in": "path",
+    "required": true,
+    "schema": {
+      "type": "integer",
+      "exclusiveMinimum": 0
+    }
+  },
+  "response_codes": [
+    "200",
+    "403",
+    "404",
+    "422",
+    "503"
+  ],
+  "success_required_fields": [
+    "exam_submission_id",
+    "overall_status",
+    "is_terminal",
+    "can_retry",
+    "pending_reason",
+    "failure_reason",
+    "seal",
+    "capture",
+    "grading",
+    "tasks",
+    "results",
+    "score",
+    "timestamps"
+  ],
+  "responses": {
+    "200": {
+      "description": "Submission processing status retrieved successfully."
+    },
+    "403": {
+      "description": "Submission access is denied for the current user."
+    },
+    "404": {
+      "description": "Submission does not exist for the provided identifier."
+    },
+    "422": {
+      "description": "Validation error for request path parameter."
+    },
+    "503": {
+      "description": "Database is temporarily unavailable."
+    }
+  }
+}

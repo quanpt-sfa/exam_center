@@ -1,18 +1,11 @@
 from __future__ import annotations
 
-from pathlib import Path
-
+from conftest import DATABASE_POSTGRES_ROOT
 from app.modules.delivery.mappers.delivery_mapper import map_generated_question_row
 
 
 def test_mvq1_migration_declares_original_linkage_foundation() -> None:
-    migration = (
-        Path(__file__).resolve().parents[3]
-        / "db"
-        / "postgres"
-        / "01_migrations"
-        / "0136_add_generated_question_original_linkage_foundation.sql"
-    )
+    migration = DATABASE_POSTGRES_ROOT / "01_migrations" / "0136_add_generated_question_original_linkage_foundation.sql"
     text = migration.read_text(encoding="utf-8")
 
     assert "ADD COLUMN IF NOT EXISTS original_question_id" in text

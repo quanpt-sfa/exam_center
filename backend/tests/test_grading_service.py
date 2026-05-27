@@ -10,6 +10,7 @@ from decimal import Decimal
 
 import pytest
 
+from conftest import API_ROOT
 from app.core.errors import ApiError
 from app.modules.grading.services.grading_job_service import GradingJobService
 
@@ -1079,8 +1080,7 @@ def test_manual_review_resolve_requires_reason() -> None:
 
 
 def test_grading_module_does_not_reference_answer_state() -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    grading_module_dir = repo_root / "apps" / "api" / "app" / "modules" / "grading"
+    grading_module_dir = API_ROOT / "app" / "modules" / "grading"
 
     python_files = sorted(grading_module_dir.rglob("*.py"))
     assert python_files
