@@ -11,6 +11,34 @@ on:
 jobs:
   backend-tests:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: exam_sys_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d exam_sys_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: exam_sys_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MAINTENANCE_HOST: localhost
+      POSTGRES_MAINTENANCE_PORT: "5432"
+      POSTGRES_MAINTENANCE_DB: postgres
+      POSTGRES_MAINTENANCE_USER: postgres
+      POSTGRES_MAINTENANCE_PASSWORD: postgres
+      POSTGRES_SSLMODE: prefer
+      POSTGRES_CONNECT_TIMEOUT: "3"
+      ENVIRONMENT: test
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,6 +52,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r backend/requirements-dev.txt
+
+      - name: Check PostgreSQL test DB target
+        run: python database/postgres/scripts/check_test_db_target.py
 
       - name: Run backend tests
         run: python -m pytest backend/tests -q
@@ -57,6 +88,33 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}/backend:${{ github.workspace }}/worker
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: exam_sys_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_MAINTENANCE_HOST: localhost
+      POSTGRES_MAINTENANCE_PORT: "5432"
+      POSTGRES_MAINTENANCE_DB: postgres
+      POSTGRES_MAINTENANCE_USER: postgres
+      POSTGRES_MAINTENANCE_PASSWORD: postgres
+      POSTGRES_SSLMODE: prefer
+      POSTGRES_CONNECT_TIMEOUT: "3"
+      ENVIRONMENT: test
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: exam_sys_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d exam_sys_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,6 +128,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r worker/requirements-dev.txt
+
+      - name: Check PostgreSQL test DB target
+        run: python database/postgres/scripts/check_test_db_target.py
 
       - name: Run worker tests
         run: python -m pytest worker/tests -q
