@@ -137,6 +137,11 @@ jobs:
       - name: Check PostgreSQL test DB target
         run: python database/postgres/scripts/check_test_db_target.py
 
+      - name: Run worker PostgreSQL runtime smoke
+        env:
+          EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION: "1"
+        run: python -m pytest -c worker/pytest.ini worker/tests/test_worker_postgres_runtime_smoke.py -q
+
       - name: Run worker tests
         run: python -m pytest worker/tests -q
 
