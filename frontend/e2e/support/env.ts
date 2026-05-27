@@ -44,11 +44,11 @@ export function authMode(): Ue2eAuthMode {
 }
 
 export function apiBaseUrl(): string {
-  return envText('API_BASE_URL', 'http://127.0.0.1:8000').replace(/\/$/, '');
+  return envText('API_BASE_URL', 'http://127.0.0.1:8001').replace(/\/$/, '');
 }
 
 export function frontendBaseUrl(): string {
-  return envText('FRONTEND_BASE_URL', 'http://127.0.0.1:5173').replace(/\/$/, '');
+  return envText('FRONTEND_BASE_URL', 'http://127.0.0.1:4173').replace(/\/$/, '');
 }
 
 export function ownerPersona(): Ue2ePersona {
