@@ -8,3 +8,4 @@ build/
 .env
 .env.local
 .env.lan
+frontend-e2e-local.*.log
