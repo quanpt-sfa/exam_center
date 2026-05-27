@@ -1,103 +1,91 @@
 # Exam Center Standalone
 
-Minimal local development scaffold for the standalone workspace.
+Standalone workspace for the current Exam Center runtime and contracts.
 
-## Prerequisites
+## Architecture
 
-- Docker Desktop with `docker compose`
-- Python 3.12 for local backend and worker commands
-- Node.js 20 for local frontend commands
+- `backend/`: FastAPI backend
+- `frontend/`: React + Vite frontend
+- `worker/`: background worker runtime
+- `database/postgres/`: PostgreSQL schema, scripts, and DB smoke assets
+- `contracts/`: API, deployment, and worker-facing contracts
+- `docs/`: current routing and workflow docs
 
-## Safety
+## Directory Map
 
-- Use only local placeholder credentials.
-- Do not point these commands at a production-like database.
-- This scaffold does not run migrations, resets, or seed scripts automatically.
+- `backend/app/main.py`: backend entrypoint
+- `frontend/src/main.tsx`: frontend entrypoint
+- `worker/worker_runtime/cli.py`: worker entrypoint
+- `database/postgres/README.md`: database runtime landing
+- `manifest.yaml`: agent routing manifest
+- `QUICK_EDIT.md`: shortest edit path
 
-## Start The Dev Stack
+## Quick Start
+
+Local dev scaffold:
 
 ```powershell
 docker compose -f docker-compose.dev.yml up
 ```
 
-Services:
-
-- frontend: [http://localhost:5173](http://localhost:5173)
-- backend: [http://localhost:8001](http://localhost:8001)
-- postgres: `localhost:5432`
-
-The compose file uses unsafe local placeholders only:
-
-- `POSTGRES_PASSWORD=postgres`
-- `EXAM_SYS_NEXT_ACCESS_TOKEN_SECRET=dev-only-change-me`
-- `EXAM_SYS_NEXT_REFRESH_TOKEN_SECRET=dev-only-change-me`
-
-## Stop The Dev Stack
+Manual backend:
 
 ```powershell
-docker compose -f docker-compose.dev.yml down
+$env:PYTHONPATH="$PWD\backend"
+python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8001
 ```
 
-Add `-v` only if you intentionally want to remove the local Postgres volume.
-
-## Manual Database Safety Check
-
-Before any manual schema setup, verify the target database is still test-only:
+Manual frontend:
 
 ```powershell
-$env:POSTGRES_DB="exam_sys_test"
-python database/postgres/scripts/check_test_db_target.py
+cd frontend
+$env:VITE_API_BASE_URL="http://localhost:8001"
+npm run dev -- --host 0.0.0.0 --port 5173
 ```
 
-Schema setup remains an explicit manual step. This scaffold does not run destructive database scripts on startup.
+Manual worker:
 
-## Run Tests
+```powershell
+$env:PYTHONPATH="$PWD\backend;$PWD\worker"
+python -m worker_runtime.cli run-grading-worker --once --worker-id local-grading-worker
+```
+
+## Tests
 
 ```powershell
 .venv/Scripts/python -m pytest backend/tests -q
 cd frontend
+npm run build
 npm test -- --run
 cd ..
 $env:PYTHONPATH="$PWD\backend;$PWD\worker"
 .venv/Scripts/python -m pytest worker/tests -q
 ```
 
-## Run Services Manually
+## CI Status
 
-Backend:
+Current CI covers:
 
-```powershell
-$env:PYTHONPATH="$PWD\backend"
-$env:ENVIRONMENT="development"
-$env:POSTGRES_HOST="localhost"
-$env:POSTGRES_PORT="5432"
-$env:POSTGRES_DB="exam_sys_test"
-$env:POSTGRES_USER="postgres"
-$env:POSTGRES_PASSWORD="postgres"
-$env:EXAM_SYS_NEXT_ACCESS_TOKEN_SECRET="dev-only-change-me"
-$env:EXAM_SYS_NEXT_REFRESH_TOKEN_SECRET="dev-only-change-me"
-python -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8001
-```
+- backend tests
+- frontend build and unit tests
+- worker tests
+- docs checkers
+- backend PostgreSQL smoke
+- worker PostgreSQL smoke
+- frontend E2E smoke
 
-Frontend:
+## Environment Safety
 
-```powershell
-cd frontend
-$env:VITE_API_BASE_URL="http://localhost:8001"
-npm ci
-npm run dev -- --host 0.0.0.0 --port 5173
-```
+- Do not commit `.env`, `.env.local`, or `.env.lan`.
+- Use placeholder-only local secrets such as `dev-only-change-me`.
+- Use only test/dev PostgreSQL targets such as `exam_sys_test`.
+- No destructive DB reset or migration runs automatically from the local scaffold.
 
-Worker:
+## Agent Reading Order
 
-```powershell
-$env:PYTHONPATH="$PWD\backend;$PWD\worker"
-$env:POSTGRES_HOST="localhost"
-$env:POSTGRES_PORT="5432"
-$env:POSTGRES_DB="exam_sys_test"
-$env:POSTGRES_USER="postgres"
-$env:POSTGRES_PASSWORD="postgres"
-python -m worker_runtime.cli run-grading-worker --once --worker-id local-grading-worker
-```
-
-Worker startup is left manual because runtime mode, schema state, and queue assumptions depend on the task you are validating.
+1. `manifest.yaml`
+2. `AGENTS.md`
+3. `QUICK_EDIT.md`
+4. `<domain>/AGENTS.md`
+5. `<domain>/README.md`
+6. target file, then nearest test

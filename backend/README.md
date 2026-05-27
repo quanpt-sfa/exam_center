@@ -1,19 +1,13 @@
-# Backend Staging Landing
+# Backend
 
 Purpose:
-- Hold the staged backend copy from `backend/**` inside `backend/**`.
+- Hold the active FastAPI backend runtime under `backend/**`.
 
-Current status:
-- Backend files are staged and frozen for provenance and review.
-
-Local read-first files:
+Read first:
 - `backend/AGENTS.md`
 - `backend/app/main.py`
 - `backend/tests/conftest.py`
 
-Validation command references:
+Validate:
 - `python tools/docs/check_project_readiness.py`
-- `python tools/docs/check_legacy_boundaries.py`
-
-Known limitation:
-- Commands may still require repo-root context until the standalone tree is promoted.
+- `.venv/Scripts/python -m pytest backend/tests -q`

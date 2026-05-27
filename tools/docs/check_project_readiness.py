@@ -9,6 +9,7 @@ MANIFEST = REPO_ROOT / "manifest.yaml"
 QUICK_EDIT = REPO_ROOT / "QUICK_EDIT.md"
 REQUIRED = (
     REPO_ROOT / "AGENTS.md",
+    REPO_ROOT / "README.md",
     MANIFEST,
     QUICK_EDIT,
     REPO_ROOT / "docs/00-start-here/manifest.yaml",
@@ -40,6 +41,22 @@ MANIFEST_AVOID = (
     "reports/migration-closure-report.md",
     "docs/archive/**",
     "docs/evidence/**",
+)
+LANDING_DOCS = (
+    REPO_ROOT / "README.md",
+    REPO_ROOT / "AGENTS.md",
+    REPO_ROOT / "QUICK_EDIT.md",
+)
+FORBIDDEN_RUNTIME_CLAIMS = (
+    "Flask",
+    "pyodbc",
+    "SQL Server",
+    "python app.py",
+    "apps-next",
+    "docs-next",
+    "apps/api",
+    "apps/worker",
+    "db/postgres",
 )
 
 
@@ -104,6 +121,13 @@ def main() -> int:
     ):
         if not path.exists():
             violations.append(f"missing runtime readiness file: {path.relative_to(REPO_ROOT).as_posix()}")
+    for path in LANDING_DOCS:
+        if not path.exists():
+            continue
+        text = read_text(path)
+        for term in FORBIDDEN_RUNTIME_CLAIMS:
+            if term in text:
+                violations.append(f"{path.relative_to(REPO_ROOT).as_posix()} contains stale runtime claim: {term}")
     if violations:
         print("check_project_readiness FAILED")
         for item in violations:

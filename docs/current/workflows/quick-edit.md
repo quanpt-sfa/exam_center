@@ -9,7 +9,7 @@ token_budget: low
 
 Purpose:
 
-- Make a small change inside `apps-next` without opening audit-heavy context.
+- Make a small change inside the standalone runtime without opening audit-heavy context.
 
 Read-first files:
 
@@ -39,4 +39,4 @@ Escalate to audit/readiness mode when:
 
 - The target file is unknown after search.
 - The change depends on provenance, readiness, or cross-domain routing review.
-- The user explicitly asks to edit original source roots instead of staying inside `apps-next`.
+- The user explicitly asks for historical or archived source material instead of the standalone runtime.

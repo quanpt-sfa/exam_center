@@ -2,7 +2,7 @@
 
 Purpose:
 
-- Edit, add, or delete one function with minimal context.
+- Make one small change with minimal context in the standalone runtime.
 
 Do not open by default:
 
@@ -15,8 +15,8 @@ Do not open by default:
 
 Required read order:
 
-1. `AGENTS.md`
-2. `manifest.yaml`
+1. `manifest.yaml`
+2. `AGENTS.md`
 3. `<domain>/AGENTS.md`
 4. `<domain>/README.md`
 5. target source file
@@ -24,10 +24,10 @@ Required read order:
 
 Search-first rule:
 
-- Identify domain first.
-- Use search or grep before opening unknown source files.
-- Open the target source file and nearest test only after search.
+- Identify the domain first.
+- Search symbol, path, or test name before opening unknown files.
+- Open only the target file and nearest test after search narrows scope.
 
 Boundary rule:
 
-- Stay inside `apps-next` unless the user explicitly asks to edit original source roots.
+- Stay inside the standalone active roots unless the user explicitly asks for historical or archived material.

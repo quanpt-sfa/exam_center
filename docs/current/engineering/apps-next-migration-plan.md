@@ -5,7 +5,7 @@ source_of_truth: true
 token_budget: low
 ---
 
-# Apps Next Migration Plan
+# Standalone Runtime Consolidation Notes
 
 ## 1. Objective
 
@@ -56,37 +56,31 @@ Also exclude generated artifacts, local secrets, local environment files, caches
 ## 5. Proposed the standalone tree directory tree
 
 ```text
-apps-next/
-  README.md
-  api/
+exam_center/
+  backend/
   frontend/
   worker/
-  db/
+  database/
     postgres/
   contracts/
     api/
     deployment/
-    worker-runtime/
+    worker/
   docs/
-    start-here/
-    current/
   tools/
-    docs/
-  tests/
-    docs/
 ```
 
 Directory intent:
 
-- `api/`: staged FastAPI backend copy from `backend/**`.
+- `backend/`: FastAPI backend runtime.
 - `frontend/`: staged React/Vite frontend copy from `frontend/**`.
 - `worker/`: staged worker runtime copy from `worker/**`.
 - `database/postgres/`: staged PostgreSQL runtime copy from `database/postgres/**`.
 - `contracts/api/`: staged API contract docs from `contracts/api/**`.
 - `contracts/deployment/`: staged deployment and runtime contract docs from `contracts/deployment/**`.
-- `contracts/worker-runtime/`: staged worker docs from `contracts/worker/**`.
-- `docs/start-here/` and `docs/current/`: staged current docs from `docs/00-start-here/**` and `docs/current/**`.
-- `tools/docs/` and `tests/docs/`: staged documentation checkers.
+- `contracts/worker/`: worker docs from `contracts/worker/**`.
+- `docs/`: current routing and workflow docs.
+- `tools/docs/`: documentation checkers.
 
 ## 6. Copy phases
 
@@ -104,7 +98,7 @@ Directory intent:
 Minimum validation before any staged workspace is accepted:
 
 - Run `python tools/docs/check_current_docs_only.py` in the original repository.
-- Add a future `apps-next` inventory checker that fails if copied files come from outside the allowed source paths.
+- Keep a standalone inventory checker that fails if active landing docs point outside the allowed source paths.
 - Add a future staged-docs checker that verifies `docs/**` remains current-only.
 - Compare the staged file list against the approved dry-run allowlist.
 - Run focused runtime validation from the original source paths before treating staged results as meaningful.
