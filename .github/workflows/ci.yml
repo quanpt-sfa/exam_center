@@ -261,6 +261,11 @@ jobs:
           EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION: "1"
         run: python -m pytest -c worker/pytest.ini worker/tests/test_worker_postgres_runtime_smoke.py -q
 
+      - name: Run core submission-processing chain smoke
+        env:
+          EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION: "1"
+        run: python -m pytest -c worker/pytest.ini worker/tests/test_core_submission_processing_chain_postgres_integration.py -q
+
       - name: Run worker tests
         run: python -m pytest worker/tests -q
 
