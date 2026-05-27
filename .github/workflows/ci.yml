@@ -261,6 +261,37 @@ jobs:
           EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION: "1"
         run: python -m pytest -c worker/pytest.ini worker/tests/test_worker_postgres_runtime_smoke.py -q
 
+      - name: Ensure PostgreSQL client is available
+        shell: bash
+        run: |
+          if ! command -v psql >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y postgresql-client
+          fi
+
+      - name: Prepare PostgreSQL schema for core chain smoke
+        shell: bash
+        run: |
+          TEMP_ENV="$RUNNER_TEMP/exam_sys_test.env"
+          trap 'rm -f "$TEMP_ENV"' EXIT
+          cat > "$TEMP_ENV" <<'EOF'
+          DB_HOST=localhost
+          DB_PORT=5432
+          DB_USER=postgres
+          DB_PASSWORD=postgres
+          DB_NAME=exam_sys_test
+          DB_MAINTENANCE_DATABASE=postgres
+          DB_SSLMODE=prefer
+          POSTGRES_DB=exam_sys_test
+          EOF
+          python database/postgres/scripts/check_test_db_target.py
+          bash database/postgres/scripts/run_all_migrations.sh "$TEMP_ENV"
+
+      - name: Run core submission-processing chain smoke
+        env:
+          EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION: "1"
+        run: python -m pytest -c worker/pytest.ini worker/tests/test_core_submission_processing_chain_postgres_integration.py -q
+
       - name: Run worker tests
         run: python -m pytest worker/tests -q
 
