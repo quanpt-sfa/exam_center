@@ -1,16 +1,11 @@
-import { readFileSync, readdirSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readdirSync } from 'node:fs';
 
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 
 import { SubmissionProcessingResultPanel } from '../components/SubmissionProcessingResultPanel';
 import { ProcessingStatusApiError, ProcessingStatusResponse } from '../types';
-
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(CURRENT_DIR, '..', '..', '..', '..', '..', '..');
-const FIXTURE_DIR = resolve(REPO_ROOT, 'apps', 'api', 'tests', 'fixtures', 'processing_status');
+import { loadProcessingStatusFixture, PROCESSING_STATUS_FIXTURE_DIR } from './testPaths';
 
 const FORBIDDEN_TOKENS = [
   'answer_state',
@@ -27,8 +22,7 @@ const FORBIDDEN_TOKENS = [
 ];
 
 function loadFixture(name: string): ProcessingStatusResponse {
-  const fixturePath = resolve(FIXTURE_DIR, name);
-  return JSON.parse(readFileSync(fixturePath, 'utf-8')) as ProcessingStatusResponse;
+  return loadProcessingStatusFixture<ProcessingStatusResponse>(name);
 }
 
 function expectNoForbiddenTokens(text: string, context: string): void {
@@ -40,7 +34,7 @@ function expectNoForbiddenTokens(text: string, context: string): void {
 
 describe('processing status redaction guards', () => {
   test('rendering all status fixtures does not leak forbidden content', () => {
-    const fixtureFiles = readdirSync(FIXTURE_DIR).filter((name) => name.endsWith('.json'));
+    const fixtureFiles = readdirSync(PROCESSING_STATUS_FIXTURE_DIR).filter((name) => name.endsWith('.json'));
     expect(fixtureFiles.length).toBeGreaterThan(0);
 
     for (const fixtureFile of fixtureFiles) {

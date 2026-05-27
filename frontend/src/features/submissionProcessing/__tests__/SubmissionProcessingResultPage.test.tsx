@@ -1,7 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -9,6 +5,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { SubmissionProcessingResultPage } from '../SubmissionProcessingResultPage';
 import type { ProcessingStatusApiError, ProcessingStatusResponse } from '../types';
 import type { UseSubmissionProcessingStatusState } from '../useSubmissionProcessingStatus';
+import { loadProcessingStatusFixture } from './testPaths';
 
 const useSubmissionProcessingStatusMock = vi.fn();
 
@@ -16,12 +13,8 @@ vi.mock('../useSubmissionProcessingStatus', () => ({
   useSubmissionProcessingStatus: (...args: unknown[]) => useSubmissionProcessingStatusMock(...args),
 }));
 
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(CURRENT_DIR, '..', '..', '..', '..', '..', '..');
-const FIXTURE_DIR = resolve(REPO_ROOT, 'apps', 'api', 'tests', 'fixtures', 'processing_status');
-
 function loadFixture(name: string): ProcessingStatusResponse {
-  return JSON.parse(readFileSync(resolve(FIXTURE_DIR, name), 'utf-8')) as ProcessingStatusResponse;
+  return loadProcessingStatusFixture<ProcessingStatusResponse>(name);
 }
 
 function makeHookState(overrides: Partial<UseSubmissionProcessingStatusState>): UseSubmissionProcessingStatusState {

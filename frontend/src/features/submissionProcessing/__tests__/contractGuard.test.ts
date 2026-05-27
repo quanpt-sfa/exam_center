@@ -1,6 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 import { describe, expect, test } from 'vitest';
 
@@ -10,10 +9,7 @@ import {
   PROCESSING_OVERALL_STATUSES,
   TERMINAL_PROCESSING_STATUSES,
 } from '../statusContract';
-
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(CURRENT_DIR, '..', '..', '..', '..', '..', '..');
-const FIXTURE_DIR = resolve(REPO_ROOT, 'apps', 'api', 'tests', 'fixtures', 'processing_status');
+import { PROCESSING_STATUS_FIXTURE_DIR } from './testPaths';
 
 const EXPECTED_ALL_STATUSES = [
   'NOT_FOUND',
@@ -73,11 +69,13 @@ describe('processing status contract guards', () => {
   });
 
   test('fixture payloads include all required public response fields', () => {
-    const fixtureFiles = readdirSync(FIXTURE_DIR).filter((name) => name.endsWith('.json'));
+    const fixtureFiles = readdirSync(PROCESSING_STATUS_FIXTURE_DIR).filter((name) => name.endsWith('.json'));
     expect(fixtureFiles.length).toBeGreaterThan(0);
 
     for (const fixtureFile of fixtureFiles) {
-      const payload = JSON.parse(readFileSync(resolve(FIXTURE_DIR, fixtureFile), 'utf-8')) as Record<string, unknown>;
+      const payload = JSON.parse(
+        readFileSync(resolve(PROCESSING_STATUS_FIXTURE_DIR, fixtureFile), 'utf-8')
+      ) as Record<string, unknown>;
       for (const key of PROCESSING_PUBLIC_RESPONSE_FIELDS) {
         expect(key in payload, `${fixtureFile} is missing ${key}`).toBe(true);
       }

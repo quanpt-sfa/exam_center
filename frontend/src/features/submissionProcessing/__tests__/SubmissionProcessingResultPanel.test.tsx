@@ -1,16 +1,9 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
 
 import { SubmissionProcessingResultPanel } from '../components/SubmissionProcessingResultPanel';
 import { ProcessingStatusApiError, ProcessingStatusResponse } from '../types';
-
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(CURRENT_DIR, '..', '..', '..', '..', '..', '..');
-const FIXTURE_DIR = resolve(REPO_ROOT, 'apps', 'api', 'tests', 'fixtures', 'processing_status');
+import { loadProcessingStatusFixture } from './testPaths';
 
 const FORBIDDEN_TOKENS = [
   'answer_state',
@@ -26,8 +19,7 @@ const FORBIDDEN_TOKENS = [
 ];
 
 function loadFixture(name: string): ProcessingStatusResponse {
-  const fixturePath = resolve(FIXTURE_DIR, name);
-  return JSON.parse(readFileSync(fixturePath, 'utf-8')) as ProcessingStatusResponse;
+  return loadProcessingStatusFixture<ProcessingStatusResponse>(name);
 }
 
 function renderFromFixture(name: string) {

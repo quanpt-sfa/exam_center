@@ -1,21 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
 import { buildApiUrl } from '../../../shared/api/httpClient';
 import { getSubmissionProcessingStatus } from '../api';
-
-const CURRENT_DIR = dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = resolve(CURRENT_DIR, '..', '..', '..', '..', '..', '..');
-const PROCESSING_FIXTURE_DIR = resolve(REPO_ROOT, 'apps', 'api', 'tests', 'fixtures', 'processing_status');
-
-function loadProcessingFixture(name: string): unknown {
-  const fixturePath = resolve(PROCESSING_FIXTURE_DIR, name);
-  const raw = readFileSync(fixturePath, 'utf-8');
-  return JSON.parse(raw);
-}
+import { loadProcessingStatusFixture } from './testPaths';
 
 describe('submissionProcessing api client', () => {
   afterEach(() => {
@@ -23,7 +10,7 @@ describe('submissionProcessing api client', () => {
   });
 
   test('builds correct URL', async () => {
-    const completed = loadProcessingFixture('completed.json');
+    const completed = loadProcessingStatusFixture('completed.json');
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
@@ -57,7 +44,7 @@ describe('submissionProcessing api client', () => {
   });
 
   test('parses successful COMPLETED response fixture', async () => {
-    const completed = loadProcessingFixture('completed.json');
+    const completed = loadProcessingStatusFixture('completed.json');
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -78,7 +65,7 @@ describe('submissionProcessing api client', () => {
   });
 
   test('parses WAITING_CAPTURE response fixture', async () => {
-    const waitingCapture = loadProcessingFixture('waiting_capture.json');
+    const waitingCapture = loadProcessingStatusFixture('waiting_capture.json');
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -223,7 +210,7 @@ describe('submissionProcessing api client', () => {
 
   test('includes bearer Authorization header when access token exists', async () => {
     window.localStorage.setItem('exam_sys_next_access_token', 'submission-token');
-    const completed = loadProcessingFixture('completed.json');
+    const completed = loadProcessingStatusFixture('completed.json');
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
@@ -239,7 +226,7 @@ describe('submissionProcessing api client', () => {
   });
 
   test('does not include bearer Authorization header when access token is absent', async () => {
-    const completed = loadProcessingFixture('completed.json');
+    const completed = loadProcessingStatusFixture('completed.json');
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
