@@ -283,7 +283,11 @@ class LocalDockerPythonSandboxRunner:
         image_name: str | None = None,
         runner_version: str = _RUNNER_VERSION,
     ) -> None:
-        self._docker_binary = str(docker_binary).strip() if docker_binary else (shutil.which("docker") or "")
+        self._docker_binary = (
+            shutil.which("docker") or ""
+            if docker_binary is None
+            else str(docker_binary).strip()
+        )
         self._image_name = str(image_name or os.getenv("PYTHON_SANDBOX_DOCKER_IMAGE") or _DEFAULT_IMAGE).strip()
         self._runner_version = str(runner_version)
 
@@ -313,6 +317,8 @@ class LocalDockerPythonSandboxRunner:
         workspace = self._create_workspace()
         try:
             completed = self._invoke_docker(request=request, workspace=workspace)
+        except (FileNotFoundError, PermissionError, OSError):
+            return self._runtime_unavailable_result(runtime_ms=started)
         except subprocess.TimeoutExpired:
             return self._result(
                 status=STATUS_TIMEOUT,
@@ -403,6 +409,12 @@ class LocalDockerPythonSandboxRunner:
     def _parse_completed_payload(self, completed: subprocess.CompletedProcess[str]) -> PythonSandboxRunResult:
         stderr_preview = sanitize_preview(completed.stderr, limit=160)
         stdout_text = str(completed.stdout or "").strip()
+        if self._docker_runtime_unavailable(completed):
+            return self._runtime_unavailable_result(
+                runtime_ms=0.0,
+                stderr_preview=stderr_preview,
+                sanitized_metadata={"docker_exit_code": completed.returncode},
+            )
         if completed.returncode == 137:
             return self._result(
                 status=STATUS_MEMORY_LIMIT_EXCEEDED,
@@ -455,6 +467,24 @@ class LocalDockerPythonSandboxRunner:
             sanitized_metadata=dict(payload.get("sanitized_metadata") or {}),
         )
 
+    def _docker_runtime_unavailable(self, completed: subprocess.CompletedProcess[str]) -> bool:
+        if completed.returncode == 0:
+            return False
+        docker_output = "\n".join(
+            part.strip()
+            for part in (str(completed.stdout or ""), str(completed.stderr or ""))
+            if part and part.strip()
+        ).lower()
+        runtime_markers = (
+            "cannot connect to the docker daemon",
+            "is the docker daemon running",
+            "error during connect",
+            "daemon is not running",
+            "docker daemon",
+            "permission denied while trying to connect to the docker daemon socket",
+        )
+        return any(marker in docker_output for marker in runtime_markers)
+
     def _create_workspace(self) -> str:
         return tempfile.mkdtemp(prefix="exam-sys-python-sandbox-")
 
@@ -489,4 +519,25 @@ class LocalDockerPythonSandboxRunner:
             policy_violation_code=policy_violation_code,
             runner_version=self._runner_version,
             sanitized_metadata=dict(sanitized_metadata or {}),
+        )
+
+    def _runtime_unavailable_result(
+        self,
+        *,
+        runtime_ms: float,
+        stderr_preview: str | None = None,
+        sanitized_metadata: dict[str, Any] | None = None,
+    ) -> PythonSandboxRunResult:
+        metadata = {
+            "docker_available": False,
+            "host_fallback_allowed": False,
+        }
+        if sanitized_metadata:
+            metadata.update(sanitized_metadata)
+        return self._result(
+            status=STATUS_RUNTIME_UNAVAILABLE,
+            runtime_ms=runtime_ms,
+            error_summary="Local Docker runtime is unavailable; unsafe host execution is refused.",
+            stderr_preview=stderr_preview,
+            sanitized_metadata=metadata,
         )
