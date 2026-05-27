@@ -11,14 +11,15 @@ import psycopg
 from psycopg.conninfo import make_conninfo
 from psycopg.rows import dict_row
 import pytest
+import test_paths
 
 
 if os.getenv("EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION") != "1":
     pytestmark = pytest.mark.skip(reason="Set EXAM_SYS_NEXT_DB_HEALTH_INTEGRATION=1 to run PostgreSQL integration tests")
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-WORKER_SRC = REPO_ROOT / "apps" / "worker"
+REPO_ROOT = test_paths.PROJECT_ROOT
+WORKER_SRC = test_paths.WORKER_ROOT
 if str(WORKER_SRC) not in sys.path:
     sys.path.insert(0, str(WORKER_SRC))
 

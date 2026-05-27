@@ -4,13 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from test_paths import CAPTURE_RUNTIME_ROOT
+from test_paths import PROJECT_ROOT
+from test_paths import WORKER_RUNTIME_ROOT
+
 
 def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[3]
+    return PROJECT_ROOT
 
 
 def _capture_runtime_dir() -> Path:
-    return _repo_root() / "apps" / "worker" / "worker_runtime" / "capture"
+    return CAPTURE_RUNTIME_ROOT
 
 
 def _read_text(path: Path) -> str:
@@ -62,7 +66,7 @@ def test_capture_source_dsn_equivalent_to_app_db_is_rejected_in_production() -> 
 
 
 def test_production_cli_does_not_enable_deterministic_test_adapter() -> None:
-    cli_path = _repo_root() / "apps" / "worker" / "worker_runtime" / "cli.py"
+    cli_path = WORKER_RUNTIME_ROOT / "cli.py"
     content = _read_text(cli_path)
 
     assert "--use-deterministic-test-adapter" in content

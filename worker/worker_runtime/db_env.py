@@ -10,7 +10,7 @@ def required_postgres_db_name() -> str:
 
     database = os.getenv("POSTGRES_DB", "").strip()
     if not database:
-        raise RuntimeError("POSTGRES_DB is required; generate it from root .env.lan DB_NAME.")
+        raise RuntimeError("POSTGRES_DB is required; set an explicit standalone worker database name.")
     return database
 
 

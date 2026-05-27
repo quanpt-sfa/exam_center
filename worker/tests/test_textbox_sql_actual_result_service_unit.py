@@ -6,6 +6,9 @@ from pathlib import Path
 import sys
 from typing import Any
 
+from test_paths import GRADING_RUNTIME_ROOT
+from test_paths import PROJECT_ROOT
+
 WORKER_SRC = Path(__file__).resolve().parents[1]
 if str(WORKER_SRC) not in sys.path:
     sys.path.insert(0, str(WORKER_SRC))
@@ -234,15 +237,7 @@ def test_service_sanitizes_error_result_before_writer() -> None:
 
 
 def test_static_guard_repository_sql_uses_immutable_sealed_answer_source() -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    repository_path = (
-        repo_root
-        / "apps"
-        / "worker"
-        / "worker_runtime"
-        / "grading"
-        / "textbox_sql_actual_result_repository.py"
-    )
+    repository_path = GRADING_RUNTIME_ROOT / "textbox_sql_actual_result_repository.py"
     content = repository_path.read_text(encoding="utf-8")
 
     assert "submission.sealed_answer" in content
@@ -251,8 +246,8 @@ def test_static_guard_repository_sql_uses_immutable_sealed_answer_source() -> No
 
 
 def test_static_guard_runtime_source_does_not_reference_manual_review_or_adjustment_tables() -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    runtime_dir = repo_root / "apps" / "worker" / "worker_runtime" / "grading"
+    repo_root = PROJECT_ROOT
+    runtime_dir = GRADING_RUNTIME_ROOT
     forbidden_tables = [
         "grading.manual_review_queue",
         "grading.score_adjustment",

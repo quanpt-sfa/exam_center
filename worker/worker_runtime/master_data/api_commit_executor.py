@@ -12,9 +12,9 @@ from worker_runtime.master_data.import_handlers import TransientImportError
 
 
 def _ensure_api_package_importable() -> None:
-    """Ensure apps/api is first on sys.path so `app.*` resolves to FastAPI package."""
+    """Ensure standalone backend is first on sys.path so `app.*` resolves to FastAPI package."""
 
-    api_root = Path(__file__).resolve().parents[3] / "api"
+    api_root = Path(__file__).resolve().parents[3] / "backend"
     api_root_text = str(api_root)
 
     if api_root_text not in sys.path:

@@ -4,13 +4,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from test_paths import GRADING_RUNTIME_ROOT
+from test_paths import PROJECT_ROOT
+from test_paths import WORKER_RUNTIME_ROOT
+
 
 def _repo_root() -> Path:
-    return Path(__file__).resolve().parents[3]
+    return PROJECT_ROOT
 
 
 def _runtime_dir() -> Path:
-    return _repo_root() / "apps" / "worker" / "worker_runtime" / "grading"
+    return GRADING_RUNTIME_ROOT
 
 
 def _build_forbidden_mutable_source_token() -> str:
@@ -284,8 +288,7 @@ def test_required_phase_services_have_no_implicit_production_noop_defaults() -> 
 
 
 def test_cli_must_not_enable_test_scaffold_mode_for_production_worker() -> None:
-    repo_root = _repo_root()
-    cli_path = repo_root / "apps" / "worker" / "worker_runtime" / "cli.py"
+    cli_path = WORKER_RUNTIME_ROOT / "cli.py"
     assert cli_path.exists(), "Expected worker_runtime/cli.py to exist"
 
     content = cli_path.read_text(encoding="utf-8")
@@ -298,8 +301,7 @@ def test_cli_must_not_enable_test_scaffold_mode_for_production_worker() -> None:
 
 
 def test_cli_must_validate_executor_dsn_isolation_before_worker_start() -> None:
-    repo_root = _repo_root()
-    cli_path = repo_root / "apps" / "worker" / "worker_runtime" / "cli.py"
+    cli_path = WORKER_RUNTIME_ROOT / "cli.py"
     assert cli_path.exists(), "Expected worker_runtime/cli.py to exist"
 
     content = cli_path.read_text(encoding="utf-8")
@@ -315,8 +317,7 @@ def test_cli_must_validate_executor_dsn_isolation_before_worker_start() -> None:
 
 
 def test_cli_must_fail_fast_for_unsafe_executor_dsn_without_explicit_test_override() -> None:
-    repo_root = _repo_root()
-    cli_path = repo_root / "apps" / "worker" / "worker_runtime" / "cli.py"
+    cli_path = WORKER_RUNTIME_ROOT / "cli.py"
     assert cli_path.exists(), "Expected worker_runtime/cli.py to exist"
 
     content = cli_path.read_text(encoding="utf-8")

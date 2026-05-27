@@ -213,9 +213,10 @@ def validate_capture_source_dsn_from_env(*, allow_app_db_for_tests: bool | None 
     if allow_app_db_for_tests is None:
         allow_app_db_for_tests = str(os.getenv("ALLOW_STUDENT_CAPTURE_APP_DB_DSN_FOR_TESTS", "")).strip() == "1"
 
+    source_dsn = os.getenv("STUDENT_CAPTURE_SOURCE_DSN")
     return validate_capture_source_dsn(
-        source_dsn=os.getenv("STUDENT_CAPTURE_SOURCE_DSN"),
-        app_dsn=build_app_db_dsn_from_env(),
+        source_dsn=source_dsn,
+        app_dsn=(build_app_db_dsn_from_env() if str(source_dsn or "").strip() else None),
         allow_app_db_for_tests=bool(allow_app_db_for_tests),
         allowed_schemas_raw=os.getenv("STUDENT_CAPTURE_ALLOWED_SCHEMAS"),
         allowed_tables_raw=os.getenv("STUDENT_CAPTURE_ALLOWED_TABLES"),

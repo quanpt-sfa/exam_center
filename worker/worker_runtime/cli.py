@@ -142,7 +142,7 @@ def _resolve_dispatcher_submission_ids(explicit: list[int] | None = None) -> lis
 
 
 def _build_dispatch_submission_callable() -> AbcCallable[[int, int | None], dict]:
-    api_src = Path(__file__).resolve().parents[2] / "api"
+    api_src = Path(__file__).resolve().parents[2] / "backend"
     api_src_text = str(api_src)
     if api_src_text not in sys.path:
         sys.path.insert(0, api_src_text)
@@ -195,7 +195,7 @@ def _build_grading_worker(
     allow_test_scaffold_services: bool,
 ) -> GradingWorker:
     executor_dsn = os.getenv("TEXTBOX_SQL_EXECUTOR_DSN")
-    app_dsn = build_app_db_dsn_from_env()
+    app_dsn = build_app_db_dsn_from_env() if str(executor_dsn or "").strip() else None
     dsn_validation = validate_textbox_sql_executor_dsn(
         executor_dsn=executor_dsn,
         app_dsn=app_dsn,
@@ -1182,7 +1182,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run-grading-worker":
         executor_dsn = os.getenv("TEXTBOX_SQL_EXECUTOR_DSN")
-        app_dsn = build_app_db_dsn_from_env()
+        app_dsn = build_app_db_dsn_from_env() if str(executor_dsn or "").strip() else None
         dsn_validation = validate_textbox_sql_executor_dsn(
             executor_dsn=executor_dsn,
             app_dsn=app_dsn,

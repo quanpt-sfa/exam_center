@@ -5,6 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+from test_paths import GRADING_RUNTIME_ROOT
+from test_paths import PROJECT_ROOT
+
 WORKER_SRC = Path(__file__).resolve().parents[1]
 if str(WORKER_SRC) not in sys.path:
     sys.path.insert(0, str(WORKER_SRC))
@@ -302,8 +305,8 @@ def test_worker_run_once_propagates_materialization_exception_without_finalizati
 
 
 def test_static_guard_runtime_files_do_not_contain_forbidden_mutable_answer_source_token() -> None:
-    repo_root = Path(__file__).resolve().parents[3]
-    runtime_dir = repo_root / "apps" / "worker" / "worker_runtime" / "grading"
+    repo_root = PROJECT_ROOT
+    runtime_dir = GRADING_RUNTIME_ROOT
     forbidden = "submission." + "answer_" + "state"
 
     offenders: list[str] = []

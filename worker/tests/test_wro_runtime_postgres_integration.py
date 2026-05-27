@@ -10,6 +10,7 @@ from uuid import uuid4
 
 from psycopg.rows import dict_row
 import pytest
+import test_paths
 
 
 pytestmark = pytest.mark.skipif(
@@ -18,9 +19,9 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-API_SRC = REPO_ROOT / "apps" / "api"
-WORKER_SRC = REPO_ROOT / "apps" / "worker"
+REPO_ROOT = test_paths.PROJECT_ROOT
+API_SRC = test_paths.BACKEND_ROOT
+WORKER_SRC = test_paths.WORKER_ROOT
 TESTS_SRC = Path(__file__).resolve().parent
 
 repo_root_str = str(REPO_ROOT.resolve())
