@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 
-const frontendBaseUrl = (process.env.FRONTEND_BASE_URL || 'http://127.0.0.1:5173').replace(/\/$/, '');
+const frontendBaseUrl = (process.env.FRONTEND_BASE_URL || 'http://127.0.0.1:4173').replace(/\/$/, '');
 const isCi = Boolean(process.env.CI);
 
 export default defineConfig({
