@@ -1,15 +1,9 @@
-# PostgreSQL Staging Landing
+# PostgreSQL Runtime
 
 Purpose:
-- Hold the staged PostgreSQL runtime copy from `database/postgres/**` inside `database/postgres/**`.
+- Hold the active PostgreSQL schema, scripts, and DB checks under `database/postgres/**`.
 
-Copied source root:
-- `database/postgres/**`
-
-Current staging status:
-- PostgreSQL files are staged for review without expanding the allowlist beyond `database/postgres/**`.
-
-Copied structure summary:
+Structure summary:
 - `01_migrations/`
 - `02_seeds/`
 - `03_views/`
@@ -26,6 +20,4 @@ Read-first files:
 Validation/checker references:
 - `python tools/docs/check_project_readiness.py`
 - `python tools/docs/check_legacy_boundaries.py`
-
-Known limitation:
-- Scripts may still assume repo-root context until `apps-next` is promoted.
+- `python database/postgres/scripts/check_test_db_target.py`

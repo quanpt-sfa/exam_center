@@ -9,6 +9,7 @@ DOCS_MANIFEST = REPO_ROOT / "docs/00-start-here/manifest.yaml"
 ROUTING = REPO_ROOT / "docs/00-start-here/routing.md"
 QUICK_EDIT_WORKFLOW = REPO_ROOT / "docs/current/workflows/quick-edit.md"
 ACTIVE_DOCS = (
+    REPO_ROOT / "README.md",
     REPO_ROOT / "AGENTS.md",
     REPO_ROOT / "QUICK_EDIT.md",
     ROOT_MANIFEST,
@@ -28,9 +29,14 @@ FORBIDDEN_PATHS = (
     "apps-next/",
     "docs-next/",
     "apps/api/",
-    "apps/frontend/",
     "apps/worker/",
     "db/postgres/",
+)
+FORBIDDEN_RUNTIME_CLAIMS = (
+    "Flask",
+    "pyodbc",
+    "SQL Server",
+    "python app.py",
 )
 FORBIDDEN_REPORTS = (
     "reports/**",
@@ -107,6 +113,9 @@ def main() -> int:
             for family in FORBIDDEN_PATHS:
                 if family in line:
                     violations.append(f"{path.relative_to(REPO_ROOT).as_posix()}:{line_no}: forbidden old path {family}")
+            for claim in FORBIDDEN_RUNTIME_CLAIMS:
+                if claim in line:
+                    violations.append(f"{path.relative_to(REPO_ROOT).as_posix()}:{line_no}: stale runtime claim {claim}")
     if violations:
         print("check_docs_routing FAILED")
         for item in violations:

@@ -9,3 +9,5 @@ build/
 .env.local
 .env.lan
 frontend-e2e-local.*.log
+frontend/playwright-report/
+frontend/test-results/

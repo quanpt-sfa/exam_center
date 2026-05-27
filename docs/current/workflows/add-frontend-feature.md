@@ -36,4 +36,4 @@ Validation:
 Escalate to audit/readiness mode when:
 
 - The feature depends on staged runtime boundaries or provenance review.
-- The change requires editing original source roots instead of `apps-next`.
+- The change requires historical or archived source material instead of the standalone frontend runtime.
