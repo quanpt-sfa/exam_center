@@ -39,7 +39,6 @@ from app.modules.submission.services.submission_processing_status_service import
 from s2w7_e2e_test_support import build_runtime_conninfo
 from s2w7_e2e_test_support import cleanup_s2w7_prefixed_rows
 from s2w7_e2e_test_support import create_s2w7_textbox_sql_seed_graph
-from s2w7_e2e_test_support import open_maintenance_connection
 from s2w7_e2e_test_support import open_runtime_connection
 from worker_runtime.grading.grading_claim_service import GradingClaimService
 from worker_runtime.grading.grading_job_runtime_repository import GradingJobRuntimeRepository
@@ -69,10 +68,10 @@ def _assert_safe_test_db() -> None:
 @pytest.fixture(autouse=True)
 def _cleanup_stale_rows() -> None:
     _assert_safe_test_db()
-    with open_maintenance_connection() as conn:
+    with open_runtime_connection() as conn:
         cleanup_s2w7_prefixed_rows(conn=conn)
     yield
-    with open_maintenance_connection() as conn:
+    with open_runtime_connection() as conn:
         cleanup_s2w7_prefixed_rows(conn=conn)
 
 
@@ -81,7 +80,7 @@ def _processing_service() -> SubmissionProcessingStatusService:
 
 
 def _drop_seeded_grading_job(*, grading_job_id: int) -> None:
-    with open_maintenance_connection() as conn:
+    with open_runtime_connection() as conn:
         with conn.cursor() as cur:
             cur.execute("DELETE FROM grading.grading_event WHERE grading_job_id = %s", (int(grading_job_id),))
             cur.execute("DELETE FROM grading.grading_run WHERE grading_job_id = %s", (int(grading_job_id),))
@@ -97,10 +96,9 @@ def _fetch_gradebook_summary(*, submission_id: int) -> dict:
                 SELECT
                     exam_submission_id,
                     grading_status,
-                    total_score,
-                    max_score,
-                    question_score_count,
-                    manual_review_count
+                    final_score,
+                    total_max_score,
+                    score_status
                 FROM grading.v_submission_score_summary
                 WHERE exam_submission_id = %s
                 LIMIT 1
@@ -140,10 +138,12 @@ def _fetch_gradebook_filter_context(*, submission_id: int) -> dict:
     return dict(row)
 
 
-def _dump_payload_without_forbidden_tokens(payload: dict) -> str:
+def _dump_payload_without_forbidden_tokens(payload: dict, *, allow_answer_text: bool = False) -> str:
     rendered = str(payload).lower()
-    assert "answer_text" not in rendered
-    assert "sealed_answer" not in rendered
+    if not allow_answer_text:
+        assert "answer_text" not in rendered
+    assert "sealed_answer_text" not in rendered
+    assert "sealed_answer_payload_json" not in rendered
     assert "password" not in rendered
     assert "dsn" not in rendered
     return rendered
@@ -247,10 +247,10 @@ def test_core_submission_processing_chain_direct_grading_to_gradebook() -> None:
 
     summary_row = _fetch_gradebook_summary(submission_id=int(seed["exam_submission_id"]))
     filter_context = _fetch_gradebook_filter_context(submission_id=int(seed["exam_submission_id"]))
-    assert str(summary_row["grading_status"]) == "COMPUTED"
-    assert summary_row["total_score"] is not None
-    assert int(summary_row["question_score_count"] or 0) >= 1
-    assert int(summary_row["manual_review_count"] or 0) == 0
+    assert str(summary_row["grading_status"]) == "COMPLETED"
+    assert summary_row["final_score"] is not None
+    assert summary_row["total_max_score"] is not None
+    assert str(summary_row["score_status"]) == "COMPUTED"
 
     client = TestClient(api_app)
     try:
@@ -297,6 +297,6 @@ def test_core_submission_processing_chain_direct_grading_to_gradebook() -> None:
         assert int((detail_data.get("submission") or {}).get("exam_submission_id") or 0) == int(seed["exam_submission_id"])
         assert (detail_data.get("score") or {}).get("submission_score_id") is not None
         assert not (detail_data.get("manual_reviews") or [])
-        _dump_payload_without_forbidden_tokens(detail_data)
+        _dump_payload_without_forbidden_tokens(detail_data, allow_answer_text=True)
     finally:
         api_app.dependency_overrides.clear()

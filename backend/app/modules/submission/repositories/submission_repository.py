@@ -974,6 +974,7 @@ class SubmissionRepository:
             SELECT
                 profile.question_grading_profile_id,
                 profile.input_source,
+                profile.answer_language,
                 profile.requires_capture,
                 profile.required_capture_type,
                 profile.capture_profile_id,
