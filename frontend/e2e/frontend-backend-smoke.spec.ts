@@ -15,7 +15,7 @@ test('frontend login shell loads against standalone backend', async ({ page, req
   await expect(page.getByTestId('academy-name')).toBeVisible();
   await expect(page.getByRole('heading', { name: /Ch\u00e0o m\u1eebng tr\u1edf l\u1ea1i/i })).toBeVisible();
   await expect(page.getByLabel(/T\u00e0i kho\u1ea3n ho\u1eb7c email/i)).toBeVisible();
-  await expect(page.getByLabel(/M\u1eadt kh\u1ea9u/i)).toBeVisible();
+  await expect(page.getByTestId('password-input')).toBeVisible();
   await expect(page.getByRole('button', { name: /^\u0110\u0103ng nh\u1eadp$/i })).toBeVisible();
   await expect(page.getByTestId('support-info')).toContainText('Email:');
 });

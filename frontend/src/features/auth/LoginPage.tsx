@@ -221,6 +221,7 @@ export function LoginPage() {
                   <div className="password-field">
                     <input
                       ref={passwordInputRef}
+                      data-testid="password-input"
                       id="password"
                       name="password"
                       type={showPassword ? 'text' : 'password'}
